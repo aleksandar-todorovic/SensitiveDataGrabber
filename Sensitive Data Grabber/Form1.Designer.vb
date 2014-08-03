@@ -36,6 +36,7 @@ Partial Class Form1
         Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.chkOneNote = New System.Windows.Forms.CheckBox()
         Me.chkPidgin = New System.Windows.Forms.CheckBox()
         Me.chkWoT = New System.Windows.Forms.CheckBox()
         Me.chkSteam = New System.Windows.Forms.CheckBox()
@@ -43,7 +44,6 @@ Partial Class Form1
         Me.chkThunderbird = New System.Windows.Forms.CheckBox()
         Me.chkChrome = New System.Windows.Forms.CheckBox()
         Me.chkFirefox = New System.Windows.Forms.CheckBox()
-        Me.chkOneNote = New System.Windows.Forms.CheckBox()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -51,7 +51,7 @@ Partial Class Form1
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(149, 118)
+        Me.Button1.Location = New System.Drawing.Point(119, 250)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 2
@@ -181,6 +181,7 @@ Partial Class Form1
         Me.GroupBox3.Controls.Add(Me.chkOneNote)
         Me.GroupBox3.Controls.Add(Me.chkPidgin)
         Me.GroupBox3.Controls.Add(Me.chkWoT)
+        Me.GroupBox3.Controls.Add(Me.Button1)
         Me.GroupBox3.Controls.Add(Me.chkSteam)
         Me.GroupBox3.Controls.Add(Me.chkEvernote)
         Me.GroupBox3.Controls.Add(Me.chkThunderbird)
@@ -192,6 +193,16 @@ Partial Class Form1
         Me.GroupBox3.TabIndex = 5
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Applications"
+        '
+        'chkOneNote
+        '
+        Me.chkOneNote.AutoSize = True
+        Me.chkOneNote.Location = New System.Drawing.Point(7, 66)
+        Me.chkOneNote.Name = "chkOneNote"
+        Me.chkOneNote.Size = New System.Drawing.Size(115, 17)
+        Me.chkOneNote.TabIndex = 7
+        Me.chkOneNote.Text = "Microsoft OneNote"
+        Me.chkOneNote.UseVisualStyleBackColor = True
         '
         'chkPidgin
         '
@@ -263,16 +274,6 @@ Partial Class Form1
         Me.chkFirefox.Text = "Mozilla Firefox"
         Me.chkFirefox.UseVisualStyleBackColor = True
         '
-        'chkOneNote
-        '
-        Me.chkOneNote.AutoSize = True
-        Me.chkOneNote.Location = New System.Drawing.Point(7, 66)
-        Me.chkOneNote.Name = "chkOneNote"
-        Me.chkOneNote.Size = New System.Drawing.Size(115, 17)
-        Me.chkOneNote.TabIndex = 7
-        Me.chkOneNote.Text = "Microsoft OneNote"
-        Me.chkOneNote.UseVisualStyleBackColor = True
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -281,7 +282,6 @@ Partial Class Form1
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.Button1)
         Me.Name = "Form1"
         Me.Text = "Form1"
         Me.GroupBox1.ResumeLayout(False)
