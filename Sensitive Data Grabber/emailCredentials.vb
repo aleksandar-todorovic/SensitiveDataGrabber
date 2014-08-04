@@ -26,10 +26,13 @@
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        If ComboBox1.SelectedIndex = 3 Then
+        If ComboBox1.SelectedIndex = 5 Then
             TextBox1.Visible = True
             TextBox2.Visible = True
             Label1.Visible = True
+            Label6.Visible = False
+            ComboBox1.Visible = False
+            TextBox3.Width = 237
         End If
     End Sub
 End Class

