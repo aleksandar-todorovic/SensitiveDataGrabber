@@ -3,12 +3,12 @@ SensitiveDataGrabber
 
 Visual Basic .NET program that when executes sends sensitive data to your email or saves them on a removable drive.
 
-The program is not even in alpha stage right now and you should not execute it unless you know what it does!
+The program is not even in alpha stage right now and you should not execute it unless you know what you're doing! If you know what you're doing, read the rest of this document. Otherwise, GTFO!
 
 What works for now:
 * Basic "send by email" option (works for files, not for directories).
 * Save to a removable drive works perfectly.
-* Applications supported: Evernote, Google Chrome, Microsoft OneNote, Mozilla Firefox, Mozilla Thunderbird, Pidgin, Steam and World of Tanks.
+* Applications supported: Evernote, Google Chrome, Microsoft OneNote, Mozilla Firefox, Mozilla Thunderbird, Pidgin, Steam and World of Tanks. If you want to know about what data does it steal, check out this article on my blog: http://aleksandartodorovic.wordpress.com/2014/08/03/sensitive-data-grabber-project/
 
 To do:
 * Fully implement "send by email" option.
