@@ -35,47 +35,49 @@ Partial Class emailCredentials
         Me.Label5 = New System.Windows.Forms.Label()
         Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(138, 6)
+        Me.TextBox1.Location = New System.Drawing.Point(138, 32)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(137, 20)
+        Me.TextBox1.Size = New System.Drawing.Size(204, 20)
         Me.TextBox1.TabIndex = 0
         '
         'TextBox2
         '
-        Me.TextBox2.Location = New System.Drawing.Point(281, 6)
+        Me.TextBox2.Location = New System.Drawing.Point(348, 32)
         Me.TextBox2.Name = "TextBox2"
         Me.TextBox2.Size = New System.Drawing.Size(27, 20)
         Me.TextBox2.TabIndex = 1
         '
         'TextBox3
         '
-        Me.TextBox3.Location = New System.Drawing.Point(138, 32)
+        Me.TextBox3.Location = New System.Drawing.Point(138, 6)
         Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.Size = New System.Drawing.Size(170, 20)
+        Me.TextBox3.Size = New System.Drawing.Size(89, 20)
         Me.TextBox3.TabIndex = 2
         '
         'TextBox4
         '
         Me.TextBox4.Location = New System.Drawing.Point(138, 58)
         Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.Size = New System.Drawing.Size(170, 20)
+        Me.TextBox4.Size = New System.Drawing.Size(237, 20)
         Me.TextBox4.TabIndex = 3
         '
         'TextBox5
         '
         Me.TextBox5.Location = New System.Drawing.Point(138, 84)
         Me.TextBox5.Name = "TextBox5"
-        Me.TextBox5.Size = New System.Drawing.Size(170, 20)
+        Me.TextBox5.Size = New System.Drawing.Size(237, 20)
         Me.TextBox5.TabIndex = 4
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
+        Me.Label1.Location = New System.Drawing.Point(12, 35)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(116, 13)
         Me.Label1.TabIndex = 5
@@ -84,7 +86,7 @@ Partial Class emailCredentials
         'Button1
         '
         Me.Button1.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.Button1.Location = New System.Drawing.Point(152, 136)
+        Me.Button1.Location = New System.Drawing.Point(217, 136)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 6
@@ -94,7 +96,7 @@ Partial Class emailCredentials
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 35)
+        Me.Label2.Location = New System.Drawing.Point(12, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(111, 13)
         Me.Label2.TabIndex = 7
@@ -131,24 +133,43 @@ Partial Class emailCredentials
         '
         Me.TextBox6.Location = New System.Drawing.Point(138, 110)
         Me.TextBox6.Name = "TextBox6"
-        Me.TextBox6.Size = New System.Drawing.Size(170, 20)
+        Me.TextBox6.Size = New System.Drawing.Size(237, 20)
         Me.TextBox6.TabIndex = 11
         '
         'Button2
         '
         Me.Button2.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Button2.Location = New System.Drawing.Point(233, 136)
+        Me.Button2.Location = New System.Drawing.Point(298, 136)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(75, 23)
         Me.Button2.TabIndex = 12
         Me.Button2.Text = "Cancel"
         Me.Button2.UseVisualStyleBackColor = True
         '
+        'ComboBox1
+        '
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(258, 6)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.TabIndex = 13
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(234, 9)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(18, 13)
+        Me.Label6.TabIndex = 14
+        Me.Label6.Text = "@"
+        '
         'emailCredentials
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(320, 167)
+        Me.ClientSize = New System.Drawing.Size(391, 171)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.TextBox6)
         Me.Controls.Add(Me.Label5)
@@ -183,4 +204,6 @@ Partial Class emailCredentials
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents TextBox6 As System.Windows.Forms.TextBox
     Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
 End Class

