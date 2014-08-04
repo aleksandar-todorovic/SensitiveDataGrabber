@@ -1,4 +1,4 @@
-SensitiveDataGrabber
+Sensitive Data Grabber
 ====================
 
 Visual Basic .NET program that when executes sends sensitive data to your email or saves them on a removable drive.
